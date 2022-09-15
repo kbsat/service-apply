@@ -69,31 +69,28 @@ class ComboBoxMenuItem(
     private val contents: List<AccordionContent>
 ) : MenuItem(placeholder) {
     override fun toComponent(): Component {
-
         val associateBy = contents.associateBy { it.title }
         // local storage
         val layout = VerticalLayout()
 
         val anchor = Anchor("", "과제 관리")
         val tab = Tab().apply {
-            isVisible = false
             add(anchor)
         }
         val anchor2 = Anchor("", "선발 과정")
         val tab2 = Tab().apply {
-            isVisible = false
             add(anchor2)
         }
 
         val tabs = createTabs(listOf(tab, tab2))
+        tabs.isVisible = false
 
         val comboBox = ComboBox<String>().apply {
             placeholder = title
             setItems(contents.map { it.title })
 
             addValueChangeListener {
-                tab.isVisible = true
-                tab2.isVisible = true
+                tabs.isVisible = true
                 val id = associateBy[it.value]?.id
                 anchor.href = "admin/missions/${id}"
                 anchor2.href = "admin/selections/${id}"
