@@ -58,8 +58,7 @@ class BaseLayout(
             "기수 관리" of TermsView::class.java,
             "모집 관리" of RecruitmentsView::class.java,
             "평가 관리" of EvaluationsView::class.java,
-            "과제 관리".accordionOf("admin/missions", recruitments),
-            "선발 과정".accordionOf("admin/selections", recruitments),
+            "모집 선택".comboBoxOf((recruitments)),
             "부정행위자" of CheatersView::class.java,
             "메일 관리" of MailsView::class.java
         )
