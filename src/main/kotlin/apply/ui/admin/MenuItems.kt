@@ -15,7 +15,7 @@ infix fun String.of(navigationTarget: Class<out Component>): MenuItem {
 }
 
 infix fun String.comboBoxOf(recruitments: List<RecruitmentResponse>): MenuItem {
-    return ComboBoxMenuItem(this, recruitments)
+    return ComboBoxMenuItem(this, recruitments.reversed())
 }
 
 sealed class MenuItem(protected val title: String) {
