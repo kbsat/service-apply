@@ -29,9 +29,11 @@ class SingleMenuItem(
     private val navigationTarget: Class<out Component>
 ) : MenuItem(title) {
     override fun toComponent(): Component {
-        return Tab(RouterLink(title, navigationTarget).apply {
-            style.set("justify-content", "center")
-        })
+        return Tab(
+            RouterLink(title, navigationTarget).apply {
+                style.set("justify-content", "center")
+            }
+        )
     }
 }
 

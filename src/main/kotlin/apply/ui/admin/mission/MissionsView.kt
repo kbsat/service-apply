@@ -35,7 +35,11 @@ class MissionsView(
     private var recruitmentId: Long = 0L
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
+        if (recruitmentId == parameter) {
+            return
+        }
         recruitmentId = parameter
+        removeAll()
         add(createTitle(), createButton(), createGrid())
     }
 
