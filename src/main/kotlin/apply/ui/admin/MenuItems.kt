@@ -14,7 +14,7 @@ infix fun String.of(navigationTarget: Class<out Component>): MenuItem {
     return SingleMenuItem(this, navigationTarget)
 }
 
-fun String.comboBoxOf(recruitments: List<RecruitmentResponse>): MenuItem {
+infix fun String.comboBoxOf(recruitments: List<RecruitmentResponse>): MenuItem {
     return ComboBoxMenuItem(this, recruitments.map { it.toContent() })
 }
 
@@ -51,6 +51,11 @@ class ComboBoxMenuItem(
         }
 
         val missionsLink = RouterLink("과제 관리", MissionsView::class.java, 0)
+            .apply {
+                addAttachListener {
+                    println(this.parent.get().id)
+                }
+            }
         val selectionLink = RouterLink("선발 과정", SelectionView::class.java, 0)
 
         val hiddenTabs = createTabs(listOf(Tab(missionsLink), Tab(selectionLink)))
