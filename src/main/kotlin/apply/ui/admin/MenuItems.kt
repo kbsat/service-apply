@@ -15,10 +15,8 @@ infix fun String.of(navigationTarget: Class<out Component>): MenuItem {
 }
 
 infix fun String.comboBoxOf(recruitments: List<RecruitmentResponse>): MenuItem {
-    return ComboBoxMenuItem(this, recruitments.map { it.toContent() })
+    return ComboBoxMenuItem(this, recruitments)
 }
-
-private fun RecruitmentResponse.toContent(): ComboBoxContent = ComboBoxContent(id, title)
 
 sealed class MenuItem(protected val title: String) {
     abstract fun toComponent(): Component
@@ -37,15 +35,11 @@ class SingleMenuItem(
     }
 }
 
-data class ComboBoxContent(val id: Long, val title: String)
-
 class ComboBoxMenuItem(
     placeholder: String,
-    private val contents: List<ComboBoxContent>
+    private val contents: List<RecruitmentResponse>
 ) : MenuItem(placeholder) {
     override fun toComponent(): Component {
-        val associateBy = contents.associateBy { it.title }
-
         val layout = VerticalLayout().apply {
             element.style.set("width", "85%")
         }
@@ -64,15 +58,15 @@ class ComboBoxMenuItem(
                 isVisible = false
             }
 
-        val comboBox = ComboBox<String>().apply {
+        val comboBox = ComboBox<RecruitmentResponse>("선발과정으로 평가를 시작하세요.").apply {
             placeholder = title
-            setItems(contents.map { it.title })
+            setItems(contents)
+            setItemLabelGenerator { it.title }
 
             addValueChangeListener {
-                val id = associateBy[it.value]!!.id
                 hiddenTabs.isVisible = true
-                missionsLink.setRoute(MissionsView::class.java, id)
-                selectionLink.setRoute(SelectionView::class.java, id)
+                missionsLink.setRoute(MissionsView::class.java, value.id)
+                selectionLink.setRoute(SelectionView::class.java, value.id)
             }
         }
         layout.apply {
