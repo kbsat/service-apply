@@ -49,22 +49,7 @@ class BaseLayout(
     }
 
     private fun createMenu(): Component {
-        val tabComponents = mutableListOf<Component>()
-
-        for (createMenuItem in createMenuItems()) {
-            when (createMenuItem) {
-                is ComboBoxMenuItem -> tabComponents.addAll(createMenuItem.toComponents())
-                else -> tabComponents.add(createMenuItem.toComponent())
-            }
-        }
-        return createTabs(tabComponents)
-        // return createTabs(createMenuItems().map {
-        //     when (it) {
-        //         is ComboBoxMenuItem -> it.toComponents()
-        //         else -> it.toComponent()
-        //     }}
-        // )
-        // return createTabs(createMenuItems().map { it.toComponent() })
+        return createTabs(createMenuItems().flatMap { it.toComponents() })
     }
 
     private fun createMenuItems(): List<MenuItem> {

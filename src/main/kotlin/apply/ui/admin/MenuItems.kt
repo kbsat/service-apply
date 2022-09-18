@@ -5,7 +5,6 @@ import apply.ui.admin.mission.MissionsView
 import apply.ui.admin.selections.SelectionView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.combobox.ComboBox
-import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.router.RouterLink
 
@@ -18,21 +17,21 @@ infix fun String.comboBoxOf(recruitments: List<RecruitmentResponse>): MenuItem {
 }
 
 sealed class MenuItem(protected val title: String) {
-    abstract fun toComponent(): Component
+    abstract fun toComponents(): List<Component>
 }
 
 class SingleMenuItem(
     title: String,
     private val navigationTarget: Class<out Component>
 ) : MenuItem(title) {
-    override fun toComponent(): Component {
-        return Tab(
-            RouterLink(title, navigationTarget).apply {
-                style.set("justify-content", "center")
-            }
-        ).apply {
-            this.isSelected = false
-        }
+    override fun toComponents(): List<Component> {
+        return listOf(
+            Tab(
+                RouterLink(title, navigationTarget).apply {
+                    style.set("justify-content", "center")
+                }
+            )
+        )
     }
 }
 
@@ -40,46 +39,19 @@ class ComboBoxMenuItem(
     placeholder: String,
     private val contents: List<RecruitmentResponse>
 ) : MenuItem(placeholder) {
-    override fun toComponent(): Component {
-        val layout = VerticalLayout().apply {
-            element.style.set("width", "85%")
+    override fun toComponents(): List<Component> {
+        val missionsLink = RouterLink("과제 관리", MissionsView::class.java, 0).apply {
+            style.set("justify-content", "center")
         }
-        //
-        // val missionsLink = RouterLink("과제 관리", MissionsView::class.java, 0)
-        // val selectionLink = RouterLink("선발 과정", SelectionView::class.java, 0)
-        //
-        // val hiddenTabs = createTabs(listOf(Tab(missionsLink), Tab(selectionLink)))
-        //     .apply {
-        //         element.style.set("margin", "0 auto")
-        //         isVisible = false
-        //     }
-        //
-        // val comboBox = ComboBox<RecruitmentResponse>("선발과정으로 평가를 시작하세요.").apply {
-        //     placeholder = title
-        //     setItems(contents)
-        //     setItemLabelGenerator { it.title }
-        //
-        //     addValueChangeListener {
-        //         hiddenTabs.isVisible = true
-        //         missionsLink.setRoute(MissionsView::class.java, value.id)
-        //         selectionLink.setRoute(SelectionView::class.java, value.id)
-        //     }
-        // }
-        // layout.apply {
-        //     add(comboBox)
-        //     add(hiddenTabs)
-        // }
-        return layout
-    }
+        val selectionLink = RouterLink("선발 과정", SelectionView::class.java, 0).apply {
+            style.set("justify-content", "center")
+            style.set("font-weight", "900")
+        }
 
-    fun toComponents(): List<Component> {
-        val missionsLink = RouterLink("과제 관리", MissionsView::class.java, 0)
-        val selectionLink = RouterLink("선발 과정", SelectionView::class.java, 0)
+        val missionsTab = createHiddenTab(missionsLink)
+        val selectionTab = createHiddenTab(selectionLink)
 
-        val missionsTab = Tab(missionsLink).apply { isVisible = false }
-        val selectionTab = Tab(selectionLink).apply { isVisible = false }
-
-        val comboBox = ComboBox<RecruitmentResponse>("선발과정으로 평가를 시작하세요.").apply {
+        val comboBox = ComboBox<RecruitmentResponse>().apply {
             placeholder = title
             setItems(contents)
             setItemLabelGenerator { it.title }
@@ -93,5 +65,9 @@ class ComboBoxMenuItem(
         }
 
         return listOf(comboBox, missionsTab, selectionTab)
+    }
+
+    private fun createHiddenTab(link: RouterLink): Tab = Tab(link).apply {
+        isVisible = false
     }
 }
