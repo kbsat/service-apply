@@ -51,20 +51,38 @@ class ComboBoxMenuItem(
         val missionsTab = createHiddenTab(missionsLink)
         val selectionTab = createHiddenTab(selectionLink)
 
-        val comboBox = ComboBox<RecruitmentResponse>().apply {
+        val comboBox = ComboBox<RecruitmentResponse>("모집을 고르고 선발과정에서 평가하세요.").apply {
+
             placeholder = title
             setItems(contents)
             setItemLabelGenerator { it.title }
 
             addValueChangeListener {
                 missionsTab.isVisible = true
-                selectionTab.isVisible = true
+                missionsTab.isSelected = false
                 missionsLink.setRoute(MissionsView::class.java, value.id)
+
+                selectionTab.isVisible = true
+                selectionTab.isSelected = false
                 selectionLink.setRoute(SelectionView::class.java, value.id)
             }
         }
+        // val horizontalLayout = HorizontalLayout().apply {
+        //     alignItems = FlexComponent.Alignment.CENTER
+        // }
+        //
+        // val questionCircle = VaadinIcon.QUESTION_CIRCLE_O.create()
+        // val tooltip = Tooltip()
+        // tooltip.attachToComponent(questionCircle)
+        // tooltip.add(Paragraph("모집을 선택하고 ‘선발 과정’에서 지원자를 평가하세요!"))
+        //
+        // horizontalLayout.add(
+        //     comboBox,
+        //     questionCircle,
+        //     tooltip
+        // )
 
-        return listOf(comboBox, missionsTab, selectionTab)
+        return listOf(Tab(comboBox), missionsTab, selectionTab)
     }
 
     private fun createHiddenTab(link: RouterLink): Tab = Tab(link).apply {
