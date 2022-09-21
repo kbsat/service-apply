@@ -5,17 +5,16 @@ import apply.application.MissionService
 import apply.application.RecruitmentService
 import apply.domain.mission.MissionStatus
 import apply.ui.admin.BaseLayout
+import apply.ui.admin.HasUrlParamLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
-import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.BeforeEvent
-import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.views.EDIT_VALUE
@@ -31,7 +30,7 @@ import support.views.createPrimarySmallButton
 class MissionsView(
     private val recruitmentService: RecruitmentService,
     private val missionService: MissionService
-) : VerticalLayout(), HasUrlParameter<Long> {
+) : HasUrlParamLayout<Long>() {
     private var recruitmentId: Long = 0L
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {

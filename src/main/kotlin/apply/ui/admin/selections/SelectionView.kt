@@ -13,6 +13,7 @@ import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.evaluation.Evaluation
 import apply.ui.admin.BaseLayout
+import apply.ui.admin.HasUrlParamLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.UI
@@ -33,7 +34,6 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.BeforeEvent
-import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.views.addSortableColumn
@@ -57,7 +57,7 @@ class SelectionView(
     private val assignmentService: AssignmentService,
     private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService
-) : VerticalLayout(), HasUrlParameter<Long> {
+) : HasUrlParamLayout<Long>() {
     private var recruitmentId: Long = 0L
     private var evaluations: List<Evaluation> = evaluationService.findAllByRecruitmentId(recruitmentId)
     private var tabs: Tabs = Tabs()

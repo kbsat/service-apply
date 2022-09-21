@@ -5,6 +5,7 @@ import apply.ui.admin.mission.MissionsView
 import apply.ui.admin.selections.SelectionView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.combobox.ComboBox
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.router.RouterLink
 
@@ -40,50 +41,56 @@ class ComboBoxMenuItem(
     private val contents: List<RecruitmentResponse>
 ) : MenuItem(placeholder) {
     override fun toComponents(): List<Component> {
-        val missionsLink = RouterLink("과제 관리", MissionsView::class.java, 0).apply {
-            style.set("justify-content", "center")
-        }
-        val selectionLink = RouterLink("선발 과정", SelectionView::class.java, 0).apply {
-            style.set("justify-content", "center")
-            style.set("font-weight", "900")
-        }
+
+        val missionsLink = "과제 관리" routeOf MissionsView::class.java
+        val selectionLink = "선발 과정" routeOf SelectionView::class.java
+        selectionLink.style.set("font-weight", "900")
 
         val missionsTab = createHiddenTab(missionsLink)
         val selectionTab = createHiddenTab(selectionLink)
 
-        val comboBox = ComboBox<RecruitmentResponse>("모집을 고르고 선발과정에서 평가하세요.").apply {
-
+        val comboBox = ComboBox<RecruitmentResponse>("모집을 선택해 선발을 진행하세요.").apply {
             placeholder = title
             setItems(contents)
             setItemLabelGenerator { it.title }
 
             addValueChangeListener {
-                missionsTab.isVisible = true
-                missionsTab.isSelected = false
-                missionsLink.setRoute(MissionsView::class.java, value.id)
-
-                selectionTab.isVisible = true
-                selectionTab.isSelected = false
-                selectionLink.setRoute(SelectionView::class.java, value.id)
+                routeEvent(missionsTab, missionsLink, MissionsView::class.java)
+                routeEvent(selectionTab, selectionLink, SelectionView::class.java)
             }
         }
-        // val horizontalLayout = HorizontalLayout().apply {
-        //     alignItems = FlexComponent.Alignment.CENTER
-        // }
-        //
-        // val questionCircle = VaadinIcon.QUESTION_CIRCLE_O.create()
-        // val tooltip = Tooltip()
-        // tooltip.attachToComponent(questionCircle)
-        // tooltip.add(Paragraph("모집을 선택하고 ‘선발 과정’에서 지원자를 평가하세요!"))
-        //
-        // horizontalLayout.add(
-        //     comboBox,
-        //     questionCircle,
-        //     tooltip
-        // )
 
-        return listOf(Tab(comboBox), missionsTab, selectionTab)
+        return listOf(
+            createLineTab(),
+            Tab(comboBox),
+            missionsTab,
+            selectionTab,
+            createLineTab()
+        )
     }
+
+    private fun ComboBox<RecruitmentResponse>.routeEvent(
+        tab: Tab,
+        link: RouterLink,
+        navigationTarget: Class<out HasUrlParamLayout<Long>>
+    ) {
+        tab.isVisible = true
+        tab.isSelected = false
+        link.setRoute(navigationTarget, value.id)
+    }
+
+    private infix fun String.routeOf(navigationTarget: Class<out HasUrlParamLayout<Long>>): RouterLink {
+        return RouterLink(this, navigationTarget, 0).apply {
+            style.set("justify-content", "center")
+        }
+    }
+
+    private fun createLineTab(): Tab = Tab(
+        Div().apply {
+            setWidthFull()
+            style.set("border-top", "1px solid gray")
+        }
+    )
 
     private fun createHiddenTab(link: RouterLink): Tab = Tab(link).apply {
         isVisible = false

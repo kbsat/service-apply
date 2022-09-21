@@ -14,6 +14,7 @@ import com.vaadin.flow.component.html.Image
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
 import support.views.createTabs
@@ -64,3 +65,5 @@ class BaseLayout(
         )
     }
 }
+
+abstract class HasUrlParamLayout<T>() : VerticalLayout(), HasUrlParameter<T>
